@@ -111,7 +111,12 @@ class GtpConnection():
         if not elements:
             return
         command_name = elements[0]; args = elements[1:]
+        er = ""
+        for e in args:
+            er += e
+            er += " "
         if self.arg_error(command_name, len(args)):
+            self.respond("illegal move: {} (wrong number of arguments)".format(er[:-1]))
             return
         if command_name in self.commands:
             try:
@@ -142,8 +147,9 @@ class GtpConnection():
         False otherwise
         """
         if cmd in self.argmap and self.argmap[cmd][0] > argnum:
-                self.error(self.argmap[cmd][1])
-                return True
+            #raise ValueError("(wrong number of arguments)")                            
+            #self.error(self.argmap[cmd][1])
+            return True
         return False
 
     def debug_msg(self, msg=''):
@@ -292,8 +298,8 @@ class GtpConnection():
             board_move = args[1]
             color= GoBoardUtil.color_to_int(board_color)
             if args[1].lower()=='pass':
-                self.debug_msg("Player {} is passing\n".format(args[0]))
-                self.respond()
+                self.debug_msg("Passing not allowed\n".format(args[0]))
+                self.respond("Passing not allowed")
                 return
             move = GoBoardUtil.move_to_coord(args[1], self.board.size)
             if move:
@@ -303,13 +309,13 @@ class GtpConnection():
                 self.error("Error in executing the move %s, check given move: %s"%(move,args[1]))
                 return
             if not self.board.move(move, color):
-                self.respond("Illegal Move: {}".format(board_move))
+                self.respond("illegal Move: {}".format(board_move))
                 return
             else:
                 self.debug_msg("Move: {}\nBoard:\n{}\n".format(board_move, str(self.board.get_twoD_board())))
             self.respond()
         except Exception as e:
-            self.respond('Error: {}'.format(str(e)))
+            self.respond('illegal move: {} {} {}'.format(board_color, board_move, str(e)))
 
     def final_score_cmd(self, args):
         self.respond(self.board.final_score(self.komi))

@@ -1,0 +1,28 @@
+boardsize 7
+
+clear_board
+
+
+play b b1
+
+
+play w b1
+
+play c3
+
+play r c3
+
+play w c99
+
+play w a1
+
+
+play b a2
+
+play b b2
+
+
+play b a3
+
+
+play w a2
