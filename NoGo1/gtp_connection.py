@@ -111,12 +111,12 @@ class GtpConnection():
         if not elements:
             return
         command_name = elements[0]; args = elements[1:]
-        er = ""
-        for e in args:
-            er += e
-            er += " "
         if self.arg_error(command_name, len(args)):
-            self.respond("illegal move: {} (wrong number of arguments)".format(er[:-1]))
+            if command_name == 'play':
+                er = ""
+                for e in args:
+                    er += (e + " ")
+                self.respond("illegal move: {} (wrong number of arguments)".format(er[:-1]))
             return
         if command_name in self.commands:
             try:
@@ -148,7 +148,8 @@ class GtpConnection():
         """
         if cmd in self.argmap and self.argmap[cmd][0] > argnum:
             #raise ValueError("(wrong number of arguments)")                            
-            #self.error(self.argmap[cmd][1])
+            if cmd != 'play':
+                self.error(self.argmap[cmd][1])
             return True
         return False
 
@@ -309,7 +310,8 @@ class GtpConnection():
                 self.error("Error in executing the move %s, check given move: %s"%(move,args[1]))
                 return
             if not self.board.move(move, color):
-                self.respond("illegal Move: {}".format(board_move))
+                msg = self.board.getMsg(move,color)
+                self.respond("illegal Move: {} {}".format(board_move, msg))
                 return
             else:
                 self.debug_msg("Move: {}\nBoard:\n{}\n".format(board_move, str(self.board.get_twoD_board())))

@@ -18,6 +18,10 @@ from board_util import GoBoardUtil, BLACK, WHITE, EMPTY, BORDER, FLOODFILL
 
 class GoBoard(object):
 
+    def getMsg(self,point,color):
+        _, msg =self._play_move(point,color)
+        return msg
+
     def move(self, point, color):
         """
         Play a move on the board.
@@ -413,7 +417,7 @@ class GoBoard(object):
             c=self._point_to_coord(point)
             msg = "Row and Column: %d %d is already filled with a %s stone"%(c[0],c[1],GoBoardUtil.int_to_color(color))
             #return False,msg
-            raise ValueError("occupied")
+            raise ValueError("(occupied)")
         if point == self.ko_constraint:
             msg ="KO move is not permitted!"
             return False , msg
@@ -434,9 +438,9 @@ class GoBoard(object):
                         #self.caps = np.where(fboard==FLOODFILL)
                         self.caps += list(*np.where(fboard==FLOODFILL))
                         num_captures = np.sum(cap_inds)
-                        msg = "Capture is not permitted"
+                        msg = "(capture)"
                         self.board[point] = EMPTY
-                        raise ValueError("(capture)")
+                        #raise ValueError("(capture)")
                         return False, msg                        
                         #if num_captures == self.size*self.size:
                             #self._is_empty = True
@@ -461,9 +465,10 @@ class GoBoard(object):
             if cap_inds!= None:
                 self.board[cap_inds]=GoBoardUtil.opponent(color)
             c=self._point_to_coord(point)
-            msg = "Suicide move with color %s in the row and column: %d %d "%(color, c[0],c[1])
-            #return False, msg            
-            raise ValueError("(suicide)")
+            #msg = "Suicide move with color %s in the row and column: %d %d "%(color, c[0],c[1])
+            msg = "(suicide)"
+            return False, msg            
+            #raise ValueError("(suicide)")
 
 
     def _neighbors(self,point):
