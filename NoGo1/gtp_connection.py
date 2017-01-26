@@ -299,9 +299,10 @@ class GtpConnection():
             board_move = args[1]
             color= GoBoardUtil.color_to_int(board_color)
             if args[1].lower()=='pass':
-                self.debug_msg("Passing not allowed\n".format(args[0]))
-                self.respond("Passing not allowed")
-                return
+##                self.debug_msg("Player {} is passing\n".format(args[0]))		 +                self.debug_msg("Passing not allowed\n".format(args[0]))
+##                self.respond()
+##                return
+                raise ValueError("(passing not allowed)")
             move = GoBoardUtil.move_to_coord(args[1], self.board.size)
             if move:
                 move = self.board._coord_to_point(move[0],move[1])
