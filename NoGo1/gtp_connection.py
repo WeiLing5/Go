@@ -116,7 +116,7 @@ class GtpConnection():
                 er = ""
                 for e in args:
                     er += (e + " ")
-                self.respond("illegal move: {} (wrong number of arguments)".format(er[:-1]))
+                self.respond("illegal move: {} wrong number of arguments".format(er[:-1]))
             return
         if command_name in self.commands:
             try:
@@ -302,7 +302,7 @@ class GtpConnection():
 ##                self.debug_msg("Player {} is passing\n".format(args[0]))		 +                self.debug_msg("Passing not allowed\n".format(args[0]))
 ##                self.respond()
 ##                return
-                raise ValueError("(passing not allowed)")
+                raise ValueError("passing not allowed")
             move = GoBoardUtil.move_to_coord(args[1], self.board.size)
             if move:
                 move = self.board._coord_to_point(move[0],move[1])
@@ -312,7 +312,7 @@ class GtpConnection():
                 return
             if not self.board.move(move, color):
                 msg = self.board.getMsg(move,color)
-                self.respond("illegal Move: {} {}".format(board_move, msg))
+                self.respond("illegal move: {} {} {}".format(board_color, board_move, msg))
                 return
             else:
                 self.debug_msg("Move: {}\nBoard:\n{}\n".format(board_move, str(self.board.get_twoD_board())))

@@ -438,7 +438,7 @@ class GoBoard(object):
                         #self.caps = np.where(fboard==FLOODFILL)
                         self.caps += list(*np.where(fboard==FLOODFILL))
                         num_captures = np.sum(cap_inds)
-                        msg = "(capture)"
+                        msg = "capture"
                         self.board[point] = EMPTY
                         #raise ValueError("(capture)")
                         return False, msg                        
@@ -466,7 +466,7 @@ class GoBoard(object):
                 self.board[cap_inds]=GoBoardUtil.opponent(color)
             c=self._point_to_coord(point)
             #msg = "Suicide move with color %s in the row and column: %d %d "%(color, c[0],c[1])
-            msg = "(suicide)"
+            msg = "suicide"
             return False, msg            
             #raise ValueError("(suicide)")
 
