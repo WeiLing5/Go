@@ -142,7 +142,7 @@ class GoBoardUtil(object):
         try:
             s = point.lower()
         except Exception:
-            raise ValueError("invalid point")
+            raise ValueError("wrong coordinate")
         if s == "pass":
             return None
         try:
@@ -157,7 +157,8 @@ class GoBoardUtil(object):
             if row < 1:
                 raise ValueError
         except (IndexError, ValueError):
-            raise ValueError("invalid point: '%s'" % s)
+            #raise ValueError("invalid point: '%s'" % s)
+            raise ValueError("wrong coordinate")
         if not (col <= board_size and row <= board_size):
             #raise ValueError("point is off board: '%s'" % s)
             raise ValueError("wrong coordinate")
