@@ -64,6 +64,25 @@ class GoBoard(object):
         self.board = sboard
         return result
 
+    def negamaxBoolean(self):
+        if self.get_winner() != None:
+            return False, None
+        empty_points = self.get_empty_positions(self.to_play)
+        legal_moves = []
+        for point in empty_points:
+            if self.check_legal(point, self.to_play):
+                legal_moves.append(point)
+        for m in legal_moves:
+            self.board[m] = self.to_play
+            self.to_play = GoBoardUtil.opponent(self.to_play)
+            fail, move = self.negamaxBoolean()
+            success = not fail
+            self.board[m] = EMPTY
+            if success:
+                return True, m
+        return False, -100
+            
+
     def get_winner(self):
         """
         Returns:

@@ -11,7 +11,15 @@ from board import GoBoard
 from board_util import GoBoardUtil, BLACK, WHITE, EMPTY, BORDER, FLOODFILL
 import numpy as np
 import re
-import time
+import signal
+
+class TimeoutException(Exception):
+    pass
+
+def timeout_handler(signum, frame):
+    raise TimeoutException
+
+signal.signal(signal.SIGALRM, timeout_handler)
 
 class GtpConnection():
 
@@ -48,7 +56,8 @@ class GtpConnection():
             "play": self.play_cmd,
             "final_score": self.final_score_cmd,
             "legal_moves": self.legal_moves_cmd,
-            "timelimit": self.timelimit_cmd
+            "timelimit": self.timelimit_cmd,
+            "solve": self.solve_cmd
         }
 
         # used for argument checking
@@ -203,9 +212,24 @@ class GtpConnection():
         self.reset(int(args[0]))
         self.respond()
 
-    def solve(self, args):
-        start_time = time.time()
-        while time.time() - start_time <= time_limit:
+    def solve_cmd(self, args):
+        signal.alarm(self.time_limit)
+        backup = self.board.copy()
+        try:
+            win, move = self.board.negamaxBoolean()
+            if win and move != -100:
+                self.respond(str(self.board.to_play) \
+                              + " " \
+                              + str(self.board._point_to_coord(move)))
+            elif not win:
+                self.respond(str(GoBoardUtil.opponent(self.board.to_play)))
+            else:
+                self.respond("unknown")
+        except (TimeoutException):
+            self.respond("unknown")
+            self.board = backup
+        else:
+            signal.alarm(0)
             
 
     def timelimit_cmd(self, args):
